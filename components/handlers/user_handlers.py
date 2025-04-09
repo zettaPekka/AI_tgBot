@@ -56,6 +56,12 @@ async def chat_active(message: Message, state: FSMContext):
             ai_response = await answer_to_text_prompt(main_prompt=message.text, tg_id=message.from_user.id)
             await message.answer(ai_response)
             await state.set_state(Chat.active)
+        elif message.content_type == ContentType.PHOTO:
+            ... 
+            '''VISION MODEL'''
+        else: 
+            await message.answer('Нейросеть воспринимет только текстовые сообщения и изображения')
+
 
 @router.message(Chat.waiting)
 async def waiting(message: Message):
