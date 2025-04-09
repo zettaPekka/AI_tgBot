@@ -19,12 +19,12 @@ async def generate_prompt(tg_id: int, main_prompt: str):
     else:
         messages_list = []
         for index, message in enumerate(current_context):
-            print(message)
+            print(index, message)
             if index % 2 == 0:
                 messages_list.append({'role':'user', 'content':message['content']})
             else:
                 messages_list.append({'role':'system', 'content':message['content']})
-            messages_list.append({'role':'user', 'content':main_prompt})
+        messages_list.append({'role':'user', 'content':main_prompt})
     return messages_list
 
 async def answer_to_text_prompt(main_prompt: str, tg_id: int):
