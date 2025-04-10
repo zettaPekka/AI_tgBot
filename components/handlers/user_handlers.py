@@ -1,12 +1,15 @@
 from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery, ContentType
+from aiogram.enums.parse_mode import ParseMode
 from aiogram.filters import CommandStart, Command
 from aiogram.fsm.context import FSMContext
+from aiogram.exceptions import TelegramBadRequest
 
 from database.crud import add_user_if_not_exists, reset_context
 import components.keyboards.user_kb as kb
 from components.states.user_states import Chat
 from ai_api.generate import answer_to_text_prompt
+from ai_api.text_formatting import style_changer
 
 
 router = Router()
@@ -52,13 +55,25 @@ async def chat_active(message: Message, state: FSMContext):
         await message.answer('Дождитесь ответа')
     else:
         if message.content_type == ContentType.TEXT:
+            waiting_message = await message.answer('Ответ генерируется...')
             await state.set_state(Chat.waiting)
             ai_response = await answer_to_text_prompt(main_prompt=message.text, tg_id=message.from_user.id)
-            await message.answer(ai_response)
+            ai_response = await style_changer(latex_code=ai_response)
+            try:
+                await message.answer(ai_response, parse_mode=ParseMode.MARKDOWN)
+            except TelegramBadRequest:
+                try:
+                    ai_response = await answer_to_text_prompt(main_prompt=message.text + ' Уложись в 4000 символов.', tg_id=message.from_user.id)
+                    ai_response = await style_changer(latex_code=ai_response)
+                    await message.answer(ai_response, parse_mode=ParseMode.MARKDOWN)
+                except:
+                    await message.answer(ai_response[4080:], parse_mode=None)
             await state.set_state(Chat.active)
+            await waiting_message.delete()
         elif message.content_type == ContentType.PHOTO:
             ... 
             '''VISION MODEL'''
+            await message.answer('В разработке')
         else: 
             await message.answer('Нейросеть воспринимет только текстовые сообщения и изображения')
 

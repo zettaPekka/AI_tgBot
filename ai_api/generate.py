@@ -4,7 +4,7 @@ from database.crud import get_context, update_context
 import os
 
 api_key = os.getenv('MISTRAL_API_KEY')
-model = 'mistral-large-latest'
+model = 'codestral-latest'
 
 client = Mistral(api_key=api_key)
 
