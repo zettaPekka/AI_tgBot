@@ -8,7 +8,7 @@ from aiogram.exceptions import TelegramBadRequest
 from database.crud import add_user_if_not_exists, reset_context
 import components.keyboards.user_kb as kb
 from components.states.user_states import Chat
-from ai_api.generate import answer_to_text_prompt
+from ai_api.generate import answer_to_text_prompt, answer_to_view_prompt
 from ai_api.text_formatting import style_changer
 
 
@@ -66,9 +66,16 @@ async def chat_active(message: Message, state: FSMContext):
             await state.set_state(Chat.active)
             await waiting_message.delete()
         elif message.content_type == ContentType.PHOTO:
-            ... 
-            '''VISION MODEL'''
-            await message.answer('В разработке')
+            waiting_message = await message.answer('Ответ генерируется...')
+            await state.set_state(Chat.waiting)
+            ai_response = await answer_to_view_prompt(message=message)
+            ai_response = await style_changer(latex_code=ai_response)
+            try:
+                await message.answer(ai_response, parse_mode=ParseMode.MARKDOWN)
+            except TelegramBadRequest:
+                await message.answer(ai_response[:4050], parse_mode=None)
+            await state.set_state(Chat.active)
+            await waiting_message.delete()
         else: 
             await message.answer('Нейросеть воспринимет только текстовые сообщения и изображения')
 
