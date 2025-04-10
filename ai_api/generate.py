@@ -19,7 +19,6 @@ async def generate_prompt(tg_id: int, main_prompt: str):
     else:
         messages_list = []
         for index, message in enumerate(current_context):
-            print(index, message)
             if index % 2 == 0:
                 messages_list.append({'role':'user', 'content':message['content']})
             else:

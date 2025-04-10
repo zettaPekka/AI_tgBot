@@ -21,6 +21,7 @@ async def get_context(tg_id: int):
 async def update_context(tg_id: int, context: list):
     async with async_session() as session:
         user = await session.get(User, tg_id)
+        context = context if len(context) <= 50 else context[2:]
         user.chat_context = context
         await session.commit()
 

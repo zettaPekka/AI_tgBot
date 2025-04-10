@@ -62,12 +62,7 @@ async def chat_active(message: Message, state: FSMContext):
             try:
                 await message.answer(ai_response, parse_mode=ParseMode.MARKDOWN)
             except TelegramBadRequest:
-                try:
-                    ai_response = await answer_to_text_prompt(main_prompt=message.text + ' Уложись в 4000 символов.', tg_id=message.from_user.id)
-                    ai_response = await style_changer(latex_code=ai_response)
-                    await message.answer(ai_response, parse_mode=ParseMode.MARKDOWN)
-                except:
-                    await message.answer(ai_response[4080:], parse_mode=None)
+                await message.answer(ai_response[:4050], parse_mode=None)
             await state.set_state(Chat.active)
             await waiting_message.delete()
         elif message.content_type == ContentType.PHOTO:
