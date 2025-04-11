@@ -37,7 +37,7 @@ async def stop(message: Message, state: FSMContext):
     current_state = await state.get_state()
     if current_state == 'Chat:active':
         await state.clear()
-        await message.answer('<b>Диалог остановлен. Для начала нового используйте /generate<b>')
+        await message.answer('<b>Диалог остановлен. Для начала нового используйте /generate</b>')
     elif current_state == 'Chat:waiting':
         await message.answer('<b>Дождитесь ответа, чтобы закончить диалог</b>')
     else:
@@ -47,6 +47,19 @@ async def stop(message: Message, state: FSMContext):
 async def reset(message: Message):
     await reset_context(tg_id=message.from_user.id)
     await message.answer('<b>Контекст очищен</b>')
+
+@router.message(Command('generate'))
+async def generate_handler(message: Message, state: FSMContext):
+    current_state = await state.get_state()
+    if current_state == 'Chat:active' or current_state == 'Chat:waiting':
+        await message.answer('<b>Диалог уже активен</b>')
+    else:
+        await message.answer('<b>Диалог успешно начат. Для завершения используйте /stop</b>')
+        await state.set_state(Chat.active)
+
+@router.message(Command('info'))
+async def info(message: Message):
+    await message.answer('🚫 <b><i>Правила:</i></b>\n• Запрещён контент с ненавистью, дискриминацией (раса, пол, религия и др.), оскорблениями групп/личностей.\n• Нельзя использовать для буллинга, угроз, ксенофобии, расизма или унижающих материалов.\nПользователь несет ответственность за свои запросы.\n\n<b>Бот создан в добросовестных целях — соблюдайте уважение! 🙌</b>')
 
 @router.message(Chat.active)
 async def chat_active(message: Message, state: FSMContext): 
