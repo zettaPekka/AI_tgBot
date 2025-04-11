@@ -5,6 +5,7 @@ import logging
 
 from core.init_bot import bot
 from components.handlers.user_handlers import router as user_router
+from components.handlers.admin_handers import admin_router
 from database.init_database import init_db
 
 
@@ -13,7 +14,7 @@ logging.basicConfig(level=logging.INFO)
 
 async def main():
     dp = Dispatcher()
-    dp.include_router(user_router)
+    dp.include_routers(admin_router, user_router)
     
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)

@@ -95,3 +95,7 @@ async def chat_active(message: Message, state: FSMContext):
 @router.message(Chat.waiting)
 async def waiting(message: Message):
     await message.answer('<b>Дождитесь ответа</b>')
+
+@router.message()
+async def other(message: Message):
+    await message.answer('<b>Упс, я не знаю такую команду. Для начала диалога используйте /generate</b>')
