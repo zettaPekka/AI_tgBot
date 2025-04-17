@@ -8,8 +8,8 @@ from aiogram.exceptions import TelegramBadRequest
 from database.crud import add_user_if_not_exists, reset_context
 import components.keyboards.user_kb as kb
 from components.states.user_states import Chat
-from ai_api.generate import answer_to_text_prompt, answer_to_view_prompt
-from ai_api.text_formatting import style_changer
+from api.ai_api.generate import answer_to_text_prompt, answer_to_view_prompt
+from api.ai_api.text_formatting import style_changer
 
 
 router = Router()
