@@ -28,7 +28,7 @@ async def admin(message: Message):
 async def write_mail(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
     
-    await callback.message.answer('Введите конент разсылки',
+    await callback.message.answer('Введите конент рассылки',
                                     reply_markup=kb_cancel)
     await state.set_state(Admin.mail_text)
 
@@ -88,7 +88,7 @@ async def send_mails(message: Message, state: FSMContext):
         await message.answer('Неправильный формат, попробуй еще раз',
                                     reply_markup=kb_cancel)
         return
-    await message.answer(f'Разсылка окончена, отправлено {succes_users} пользователям')
+    await message.answer(f'Раcсылка окончена, отправлено {succes_users} пользователям')
     
 
 @admin_router.callback_query(F.data == 'cancel')
