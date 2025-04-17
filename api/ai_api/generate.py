@@ -40,10 +40,13 @@ async def generate_prompt(tg_id: int, main_prompt: str):
 
 async def answer_to_text_prompt(main_prompt: str, tg_id: int):
     prompt = await generate_prompt(tg_id=tg_id, main_prompt=main_prompt)
-    chat_response = await client.chat.complete_async(
-        model = model,
-        messages = prompt
-    )
+    try:
+        chat_response = await client.chat.complete_async(
+            model = model,
+            messages = prompt
+        )
+    except:
+        return 'Слишком много запросов на сервер. Попробуйте позже.'
     response = chat_response.choices[0].message.content
     new_context = prompt
     new_context.append({'role':'system', 'content':response})
@@ -83,10 +86,14 @@ async def answer_to_view_prompt(message: Message):
         prompt = context
         prompt.append(main_prompt)
 
-    chat_response = await client.chat.complete_async(
-        model=model,
-        messages=prompt
-    )
+    try:
+        chat_response = await client.chat.complete_async(
+            model=model,
+            messages=prompt
+        )
+    except:
+        return 'Слишком много запросов на сервер. Попробуйте позже.'
+    
     chat_response = chat_response.choices[0].message.content
     os.remove(f'images/image_{message.from_user.id}.jpg')
     
