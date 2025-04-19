@@ -5,3 +5,6 @@ class Chat(StatesGroup):
     active = State()
     inactive = State()
     waiting = State()
+
+class Image(StatesGroup):
+    prompt = State()
