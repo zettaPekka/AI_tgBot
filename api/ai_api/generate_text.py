@@ -1,5 +1,6 @@
 from mistralai import Mistral
 from aiogram.types import Message
+from dotenv import load_dotenv
 
 import os
 import base64
@@ -7,6 +8,8 @@ import base64
 from core.init_bot import bot
 from database.crud import get_context, update_context
 
+
+load_dotenv()
 
 api_key = os.getenv('MISTRAL_API_KEY')
 model = 'codestral-latest'
@@ -43,7 +46,8 @@ async def answer_to_text_prompt(main_prompt: str, tg_id: int):
     try:
         chat_response = await client.chat.complete_async(
             model = model,
-            messages = prompt
+            messages = prompt,
+            max_tokens=1600
         )
     except:
         return 'Слишком много запросов на сервер. Попробуйте позже.'
@@ -89,7 +93,8 @@ async def answer_to_view_prompt(message: Message):
     try:
         chat_response = await client.chat.complete_async(
             model=model,
-            messages=prompt
+            messages=prompt,
+            max_tokens=1600
         )
     except:
         return 'Слишком много запросов на сервер. Попробуйте позже.'

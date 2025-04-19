@@ -8,7 +8,7 @@ from aiogram.exceptions import TelegramBadRequest
 from database.crud import add_user_if_not_exists, reset_context
 import components.keyboards.user_kb as kb
 from components.states.user_states import Chat
-from api.ai_api.generate import answer_to_text_prompt, answer_to_view_prompt
+from api.ai_api.generate_text import answer_to_text_prompt, answer_to_view_prompt
 from api.ai_api.text_formatting import style_changer
 
 
@@ -17,7 +17,7 @@ router = Router()
 
 @router.message(CommandStart())
 async def start(message: Message):
-    await message.answer('<b>👋 Привет! Я — умный бот с нейросетью!\n\nЧто я умею?\n🔹 Отвечать на вопросы\n🔹 Писать тексты: статьи, посты, стихи и даже код\n🔹 Анализировать картинки (что на фото?)\n🔹 Помогать с идеями и советами\n\nКоманды:\n<i>/start - запуск бота\n/generate - начать диалог\n/stop - закончить диалог\n/reset - сбросить историю сообщений\n/info - информация и правила</i>\n\nНапиши мне что-нибудь, и я покажу, на что способен! Для начала диалога нажми кнопку ниже </b>🚀',
+    await message.answer('<b>👋 Привет! Я — умный бот с нейросетью!\n\nЧто я умею?\n• Отвечать на вопросы\n• Писать тексты: статьи, посты, стихи и даже код\n• Анализировать картинки (что на фото?)\n• Помогать с идеями и советами\n\nКоманды:\n<i>/start - запуск бота\n/generate - начать диалог\n/stop - закончить диалог\n/reset - сбросить историю сообщений\n/info - информация и правила</i>\n\nНапиши мне что-нибудь, и я покажу, на что способен! Для начала диалога нажми кнопку ниже </b>🚀',
                             reply_markup=kb.start_kb)
     await add_user_if_not_exists(tg_id=message.from_user.id)
 
@@ -38,6 +38,7 @@ async def stop(message: Message, state: FSMContext):
     if current_state == 'Chat:active':
         await state.clear()
         await message.answer('<b>Диалог остановлен. Для начала нового используйте /generate</b>')
+        await reset_context(tg_id=message.from_user.id)
     elif current_state == 'Chat:waiting':
         await message.answer('<b>Дождитесь ответа, чтобы закончить диалог</b>')
     else:
