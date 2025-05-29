@@ -14,6 +14,8 @@ logging.basicConfig(level=logging.INFO)
 
 
 async def main():
+    await init_db()
+    
     dp = Dispatcher()
     dp.include_routers(admin_router, payment_router, user_router)
     
@@ -22,7 +24,6 @@ async def main():
 
 if __name__ == '__main__':
     try:
-        asyncio.run(init_db())
         asyncio.run(main())
     except:
         pass
