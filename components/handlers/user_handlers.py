@@ -130,11 +130,13 @@ async def create_image(message: Message, state: FSMContext):
     waiting_message = await message.answer('<b>Изображение генерируется...</b>')
     image_url = await image_generator(prompt=message.text)
     try:
-        await message.answer_photo(image_url, caption='<b>Изображение сгенерировано!\n/image - сгенерировать еще\n/generate - начать диалог</b>')
+        await message.answer_photo(image_url, caption='<b>Изображение сгенерировано!\n/image - сгенерировать еще\n/generate - начать диалог</b>',
+                                    reply_markup=kb.new_image_kb)
     except:
         try:
             new_image_url = await image_generator(prompt=message.text)
-            await message.answer_photo(new_image_url, caption='<b>Изображение сгенерировано!\n/image - сгенерировать еще\n/generate - начать диалог</b>')
+            await message.answer_photo(new_image_url, caption='<b>Изображение сгенерировано!\n/image - сгенерировать еще\n/generate - начать диалог</b>',
+                                        kb=kb.new_image_kb)
         except:
             await message.answer('<b>Изображение не удалось сгенерировать, попробуйте еще раз /image</b>')
     await waiting_message.delete()

@@ -9,3 +9,7 @@ start_kb = InlineKeyboardMarkup(inline_keyboard=[
 back_kb = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='Назад', callback_data='back')]
 ])
+
+new_image_kb = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text='Сгенерировать еще', callback_data='create_image')],
+])
