@@ -28,7 +28,7 @@ async def start(message: Message):
 async def start_dialog(callback: CallbackQuery, state: FSMContext):
     current_state = await state.get_state()
     if current_state == 'Chat:active':
-        await callback.answer('Диалог уже начат</b>')
+        await callback.answer('Диалог уже начат')
         await callback.message.answer('<b>Диалог уже активен</b>')
     else:
         await callback.message.answer('<b>Диалог успешно начат. Для завершения используйте /stop</b>')
